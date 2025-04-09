@@ -9,6 +9,7 @@ from shapely.geometry import Point
 
 from mobiml.datasets import AISDK
 from mobiml.preprocessing import MobileClientExtractor
+from time import tzname
 
 try:
     from pymeos import pymeos_initialize, TGeogPointInst, TGeogPointSeq
@@ -221,14 +222,20 @@ class TestMobileClientExtractor:
 
         extractor = MobileClientExtractor(self.aisdk)
 
-        with raises(pymeos_errors.MeosInvalidArgValueError):
+        if 'UTC' in tzname:
             _ = extractor.extract(self.clients, 3)
+        else:
+            with raises(pymeos_errors.MeosInvalidArgValueError):
+                _ = extractor.extract(self.clients, 3)
 
         # if tz are set, they are currently dropped by movingpandas during trajectory creation
         self.clients.df.timestamp = self.clients.df.timestamp.dt.tz_localize('UTC')
 
-        with raises(pymeos_errors.MeosInvalidArgValueError):
+        if 'UTC' in tzname:
             _ = extractor.extract(self.clients, 3)
+        else:
+            with raises(pymeos_errors.MeosInvalidArgValueError):
+                _ = extractor.extract(self.clients, 3)
 
     def test_pymeos(self):
         """
@@ -245,5 +252,10 @@ class TestMobileClientExtractor:
 
         wkt_unaware = "[POINT (11.64066 57.602362)@2018-03-25 02:05:00, POINT (11.640432 57.602283)@2018-03-25 03:00:00]"
 
-        with raises(pymeos_errors.MeosInvalidArgValueError):
+        if 'UTC' in tzname:
             TGeogPointSeq(string=wkt_unaware, normalize=False)
+        else:
+            with raises(pymeos_errors.MeosInvalidArgValueError):
+                TGeogPointSeq(string=wkt_unaware, normalize=False)
+
+
