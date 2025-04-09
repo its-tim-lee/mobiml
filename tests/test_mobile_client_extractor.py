@@ -1,12 +1,22 @@
 import os
-import pandas as pd
-import geopandas as gpd
 from datetime import datetime
+
+import geopandas as gpd
+import pandas as pd
+import pymeos_cffi.errors as pymeos_errors
+from pytest import raises
 from shapely.geometry import Point
 
 from mobiml.datasets import AISDK
 from mobiml.preprocessing import MobileClientExtractor
 
+try:
+    from pymeos import pymeos_initialize, TGeogPointInst, TGeogPointSeq
+except ImportError as error:
+    raise ImportError(
+        "Missing optional dependencies. To use the MobileClientExtractor please "
+        "install pymeos"
+    ) from error
 
 class TestMobileClientExtractor:
     test_dir = os.path.dirname(os.path.realpath(__file__))
@@ -188,3 +198,52 @@ class TestMobileClientExtractor:
         client_data = extractor.extract(self.clients, antenna_radius_meters)
         assert isinstance(client_data, AISDK)
         assert len(client_data.df) == expected_pt_count
+
+    def test_daylight_saving_data(self):
+        tz_unaware_client_data = pd.DataFrame(
+
+            [
+                {
+                    "geometry": Point(2, 2),
+                    "# Timestamp": datetime(2018, 3, 25, 2, 5, 0),
+                    "MMSI": "99",
+                    "SOG": 1,
+                },
+                {
+                    "geometry": Point(2, 2.000001),
+                    "# Timestamp": datetime(2018, 3, 25, 3, 0, 0),
+                    "MMSI": "99",
+                    "SOG": 1,
+                },
+            ]
+        )
+        self.clients = AISDK(gpd.GeoDataFrame(tz_unaware_client_data, crs=4326))
+
+        extractor = MobileClientExtractor(self.aisdk)
+
+        with raises(pymeos_errors.MeosInvalidArgValueError):
+            _ = extractor.extract(self.clients, 3)
+
+        # if tz are set, they are currently dropped by movingpandas during trajectory creation
+        self.clients.df.timestamp = self.clients.df.timestamp.dt.tz_localize('UTC')
+
+        with raises(pymeos_errors.MeosInvalidArgValueError):
+            _ = extractor.extract(self.clients, 3)
+
+    def test_pymeos(self):
+        """
+        two AIS timestamps 02:05:00, 03:00:00, no tz set, UTC implied
+
+        daylight saving starts on 2018-03-25 02:00
+
+        MeosInvalidArgValueError (12): Timestamps for temporal value must be increasing: 2018-03-25 03:05:00+02, 2018-03-25 03:00:00+02
+        """
+
+        wkt_utc = "[POINT (11.64066 57.602362)@2018-03-25 02:05:00+00:00, POINT (11.640432 57.602283)@2018-03-25 03:00:00+00:00]"
+
+        TGeogPointSeq(string=wkt_utc, normalize=False)
+
+        wkt_unaware = "[POINT (11.64066 57.602362)@2018-03-25 02:05:00, POINT (11.640432 57.602283)@2018-03-25 03:00:00]"
+
+        with raises(pymeos_errors.MeosInvalidArgValueError):
+            TGeogPointSeq(string=wkt_unaware, normalize=False)
