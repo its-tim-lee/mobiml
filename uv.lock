@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.9"
 resolution-markers = [
     "python_full_version >= '3.12' and sys_platform != 'darwin'",
@@ -1099,7 +1100,7 @@ requires-dist = [
     { name = "geopy", specifier = ">=2.4.1" },
     { name = "h3", specifier = ">=4.2.1" },
     { name = "matplotlib", specifier = ">=3.9.4" },
-    { name = "movingpandas", specifier = ">=0.21.2" },
+    { name = "movingpandas", specifier = "==0.21.3" },
     { name = "pyarrow", specifier = ">=19.0.1" },
     { name = "pymeos", specifier = ">=1.2.0" },
     { name = "rtree", specifier = ">=1.4.0" },
@@ -1118,7 +1119,7 @@ dev = [
 
 [[package]]
 name = "movingpandas"
-version = "0.21.2"
+version = "0.21.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "geopandas" },
@@ -1126,9 +1127,9 @@ dependencies = [
     { name = "matplotlib", version = "3.9.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "matplotlib", version = "3.10.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7c/12/8019ef4d54181d536ec86966ba9f4da996a6855601310a3c88a72aae769b/movingpandas-0.21.2.tar.gz", hash = "sha256:4c3fb2c703718c31ce79f3f1a8f291dcde7a907529952184979b11c964228b1c", size = 71453 }
+sdist = { url = "https://files.pythonhosted.org/packages/37/6c/e28bad153582ecda4a9b6da47bc02b9bec6ff0369e09c14bda56c41087af/movingpandas-0.21.3.tar.gz", hash = "sha256:d05717adba72f9a15c19ba848c8e9d93a8856f7a68a4549d5e87cfe0c10eeff4", size = 72252 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3f/4c/e6859d7cc83bb5ac00e783a8192ef5d42568ca5ebd568111d5e57b8534d1/movingpandas-0.21.2-py3-none-any.whl", hash = "sha256:593d3291deedc470dd77887d144d4974e61994cd110a773d6795d3c7309c9937", size = 78161 },
+    { url = "https://files.pythonhosted.org/packages/6a/2e/26d90f933ef32942f4860a47e3e3dc286582c01ca7524049d3890b064fbb/movingpandas-0.21.3-py3-none-any.whl", hash = "sha256:b0bf6046505ab6f3ed42f0bab13cabd704d3639ed0171cb99d649a1f7e7d595d", size = 78343 },
 ]
 
 [[package]]
