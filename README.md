@@ -4,6 +4,9 @@
 
 Development of this framework was inspired by https://github.com/wherobots/GeoTorchAI
 
+![mobiml3](https://github.com/user-attachments/assets/aa50836e-5523-4df5-8bd1-3b829106991d)
+
+
 ## Installation
 
 **Note**: As of today (2025-03-18), one of our main dependencies, pymeos, [is not available on Windows](https://github.com/MobilityDB/PyMEOS/issues/1). Therefore we recommend using MobiML on Linux. 
@@ -66,7 +69,7 @@ Usage examples are provided in the `examples` directory, with [instructions](exa
 
 ## Publications
 
-[0] Graser, A. & Dragaschnig, M. (2025). Learning From Trajectory Data With MobiML. Workshop on Big Mobility Data Analysis (BMDA2025) in conjuction with EDBT/ICDT 2025.
+[0] [Graser, A. & Dragaschnig, M. (2025). Learning From Trajectory Data With MobiML. Workshop on Big Mobility Data Analysis (BMDA2025) in conjuction with EDBT/ICDT 2025.](https://ceur-ws.org/Vol-3946/BMDA-6.pdf)
 
 
 ## Acknowledgements
